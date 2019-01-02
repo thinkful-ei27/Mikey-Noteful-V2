@@ -8,19 +8,36 @@ const router = express.Router();
 // TEMP: Simple In-Memory Database
 const data = require('../db/notes');
 const simDB = require('../db/simDB');
+const knex = require('../knex');
 const notes = simDB.initialize(data);
 
 // Get All (and search by query)
 router.get('/', (req, res, next) => {
   const { searchTerm } = req.query;
 
-  notes.filter(searchTerm)
-    .then(list => {
-      res.json(list);
+  // notes.filter(searchTerm)
+  //   .then(list => {
+  //     res.json(list);
+  //   })
+  //   .catch(err => {
+  //     next(err);
+  //   });
+  knex
+    .select('notes.id', 'title', 'content')
+    .from('notes')
+    .modify(queryBuilder => {
+      if (searchTerm) {
+        queryBuilder.where('title', 'like', `%${searchTerm}%`);
+      }
+    })
+    .orderBy('notes.id')
+    .then(results => {
+      console.log(JSON.stringify(results, null, 2));
     })
     .catch(err => {
-      next(err);
-    });
+      console.error(err);
+  });
+
 });
 
 // Get a single item

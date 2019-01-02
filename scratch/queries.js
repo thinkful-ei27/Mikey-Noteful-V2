@@ -18,3 +18,36 @@ knex
   .catch(err => {
     console.error(err);
   });
+
+let searchId = 2;
+
+let updateObj = {
+  title : 'feeding guinea pigs',
+  content : 'they love kale'
+};
+
+let newObj = {
+  title : 'hating birds',
+  content : 'damn they are loud and annoying'
+};
+
+knex  
+  .select ('notes.id', 'title', 'content')
+  .from ('notes')
+  .where('notes.id', `${searchId}`)
+  .then(([results]) => res.json(results));
+
+knex
+  .select ('notes.id', 'title', 'content')
+  .from('notes')
+  .where('notes.id', `${searchId}`)
+  .update(updateObj, ['notes.id', 'title', 'content' ])
+  .then(([results]) => res.json(results));
+
+knex('notes')
+  .insert(newObj, ['notes.id', 'title', 'content'])
+  .then(([results]) => res.json(results));
+
+knex('notes')
+  .where('notes.id', `${searchId}`)
+  .del();
