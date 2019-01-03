@@ -4,12 +4,12 @@ const express = require('express');
 
 // Create an router instance (aka "mini-app")
 const router = express.Router();
+const knex = require('../knex');
 
 // TEMP: Simple In-Memory Database
-const data = require('../db/notes');
-const simDB = require('../db/simDB');
-const knex = require('../knex');
-const notes = simDB.initialize(data);
+// const data = require('../db/notes');
+// const simDB = require('../db/simDB');
+// const notes = simDB.initialize(data);
 
 // Get All (and search by query)
 router.get('/', (req, res, next) => {
@@ -130,7 +130,7 @@ router.delete('/:id', (req, res, next) => {
     .catch(err => {
       next(err);
     });
-  // res.end();
+  res.status(204).end();
 });
 
 module.exports = router;
