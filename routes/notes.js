@@ -58,16 +58,22 @@ router.get('/:id', (req, res, next) => {
 // Put update an item
 router.put('/:id', (req, res, next) => {
   const id = req.params.id;
-
+  
   /***** Never trust users - validate input *****/
   const updateObj = {};
-  const updateableFields = ['title', 'content' , 'folder_Id'];
+  const updateableFields = ['title', 'content' , 'folderId'];
 
   updateableFields.forEach(field => {
     if (field in req.body) {
       updateObj[field] = req.body[field];
     }
+    if(field ==='folderId'){
+      field = 'folder_id';
+    }
   });
+
+  updateObj['folder_id '] = updateObj['folderId'];
+  delete updateObj['folderId'];
 
   /***** Never trust users - validate input *****/
   if (!updateObj.title) {
@@ -75,7 +81,7 @@ router.put('/:id', (req, res, next) => {
     err.status = 400;
     return next(err);
   }
-  console.log(updateObj);
+  console.log('updateobj' ,updateObj);
 
   let noteId; 
 
