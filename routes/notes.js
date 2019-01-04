@@ -62,18 +62,19 @@ router.put('/:id', (req, res, next) => {
   /***** Never trust users - validate input *****/
   const updateObj = {};
   const updateableFields = ['title', 'content' , 'folderId'];
+  
 
   updateableFields.forEach(field => {
     if (field in req.body) {
       updateObj[field] = req.body[field];
     }
-    if(field ==='folderId'){
-      field = 'folder_id';
-    }
   });
-
+ 
+  // deals with notes transfering in an out of 'no folder ' state 
   updateObj['folder_id '] = updateObj['folderId'];
   delete updateObj['folderId'];
+  updateObj['folder_id '] === '' ? null :  updateObj['folder_id '];
+
 
   /***** Never trust users - validate input *****/
   if (!updateObj.title) {
@@ -114,9 +115,11 @@ router.post('/', (req, res, next) => {
   const newItem = { 
     title: title,
     content: content,
-    folder_id: folderId
+    folder_id: folderId ? folderId : null
   };
   /***** Never trust users - validate input *****/
+
+
   if (!newItem.title) {
     const err = new Error('Missing `title` in request body');
     err.status = 400;
