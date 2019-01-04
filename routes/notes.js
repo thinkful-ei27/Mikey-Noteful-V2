@@ -117,7 +117,6 @@ router.put('/:id', (req, res, next) => {
     .returning('id')
     .then(([id]) =>{
       noteId = id;
-      
       return knex('notes_tags')
         .where('note_id', noteId)
         .del();
