@@ -55,7 +55,7 @@ router.put('/:id', (req, res, next) => {
     .select ('folders.id', 'name')
     .from ('folders')
     .where('folders.id', `${id}`)
-    .update(updateObj, ['tags.id', 'name'])
+    .update(updateObj, ['folders.id', 'name'])
     .then(([results]) => {
       if(results) {res.json(results);
       } else {
